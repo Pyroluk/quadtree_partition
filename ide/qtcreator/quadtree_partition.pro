@@ -17,11 +17,11 @@ HEADERS= \
 $${BASE}/src/degreespoint.hh  \
 $${BASE}/src/mercatorpoint.hh \
 $${BASE}/src/tile.hh \
-    node.hh
+$${BASE}/src/node.hh 
 
 SOURCES= \
 $${BASE}/src/degreespoint.cc \
 $${BASE}/src/main.cc \
 $${BASE}/src/mercatorpoint.cc \
 $${BASE}/src/tile.cc \
-    node.cc
+$${BASE}/src/node.cc
