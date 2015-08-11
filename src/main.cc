@@ -6,16 +6,19 @@
 #include <vector>
 #include <math.h>
 
-
 #include "degreespoint.hh"
 #include "tile.hh"
+#include "node.hh"
+
+#define quadtreeDepth 25
 
 using namespace std;
 
-int main(int argc, char** args)
+Node* generateCountQuadtree(string FileName, char separator)
 {
     double lat, lon;
-    ifstream txtFile(*(args + sizeof(char)));
+    Node* quadtreeRoot = new Node();
+    ifstream txtFile(FileName);
 
     //read tsv file line by line
     for(string line; getline(txtFile, line); )
@@ -23,28 +26,68 @@ int main(int argc, char** args)
         //extract lat and lon
         string item;
         stringstream ss(line);
-        getline(ss, item, '|');
+        getline(ss, item, separator);
         lat = atof(item.c_str());
-        getline(ss, item, '|');
+        getline(ss, item, separator);
         lon = atof(item.c_str());
 
         if(lat != 0.0 && lon != 0.0) //valid points
         {
             //convert to path
-            std::cerr << lat << ", " << lon << std::endl;
-            vector<int> path = Tile::fromDegrees(DegreesPoint(lon,lat),25).path();
+            //std::cerr << lat << ", " << lon << std::endl;
+            vector<int> path = Tile::fromDegrees(DegreesPoint(lon,lat), quadtreeDepth).path();
 
-            //print path
-            for(auto i = 0; i < path.size(); i++)
-                cout << path[i];
+            Node* currentNode = quadtreeRoot;
 
-            cout << endl;
+            //increase counter
+            currentNode->objectCount++;
+
+            for(auto i = 0; i < quadtreeDepth; i++)
+            {
+                switch(path[i])
+                {
+                    case 0:
+                        if(currentNode->a == NULL)
+                            currentNode->a = new Node();
+
+                        currentNode = currentNode->a;
+                        break;
+                    case 1:
+                        if(currentNode->b == NULL)
+                            currentNode->b = new Node();
+
+                        currentNode = currentNode->b;
+                        break;
+                    case 2:
+                        if(currentNode->c == NULL)
+                            currentNode->c = new Node();
+
+                        currentNode = currentNode->c;
+                        break;
+                    case 3:
+                        if(currentNode->d == NULL)
+                            currentNode->d = new Node();
+
+                        currentNode = currentNode->d;
+                        break;
+                }
+
+                //increase counter
+                currentNode->objectCount++;
+            }
         }
     }
 
-    //class Node, 4 mal integer zum zählen
+    return quadtreeRoot;
+}
 
-    //switch
+int main(int argc, char** args)
+{
+    Node* quadtree = generateCountQuadtree(*(args + sizeof(char)), '|');
+
+    //traverse quadtree
+
+    //partition quadtree
 
     return 0;
 }
