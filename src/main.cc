@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 #include <math.h>
+#include <stack>
 
 #include "degreespoint.hh"
 #include "tile.hh"
@@ -91,20 +92,51 @@ Node* generateCountQuadtree(string FileName, char separator)
 int main(int argc, char** args)
 {
     Node* quadtree = generateCountQuadtree(*(args + sizeof(char)), '|');
+    Node* previousLeafNode;
 
 
     int numThreads = 8;
-    int numObjects = quadtree->objectCount;
-    int baseLine = numObjects / numThreads;
+    int64_t numObjects = quadtree->objectCount;
+    int64_t baseLine = numObjects / numThreads;
+    int64_t currentSum = 0;
 
+    vector<AddressType> splitNodes;
 
+    stack<Node*> nodeStack;
 
+    nodeStack.push(quadtree);
 
-    //traverse quadtree
+    while (!nodeStack.empty())
+    {
+        Node* currentNode = nodeStack.top();
+        nodeStack.pop();
 
+        //if its a leaf, increment counter
+        if(currentNode->a == NULL && currentNode->b == NULL && currentNode->c == NULL && currentNode->d == NULL)
+        {
+            currentSum += currentNode->objectCount;
 
+            //split, store Address of Node
+            if(currentSum > baseLine)
+            {
+                splitNodes.push_back(previousLeafNode->address);
+                currentSum = 0;
+            }
 
-    //partition quadtree
+            previousLeafNode = currentNode;
+        }
+
+        //push childes on stack
+        if (currentNode->d != NULL)
+            nodeStack.push(currentNode->d);
+        if (currentNode->c != NULL)
+            nodeStack.push(currentNode->c);
+        if (currentNode->b != NULL)
+            nodeStack.push(currentNode->b);
+        if (currentNode->a != NULL)
+            nodeStack.push(currentNode->a);
+    }
+
 
     return 0;
 }
