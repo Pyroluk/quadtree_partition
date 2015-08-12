@@ -35,7 +35,7 @@ Node* generateCountQuadtree(string FileName, char separator)
         {
             //convert to path
             //std::cerr << lat << ", " << lon << std::endl;
-            vector<int> path = Tile::fromDegrees(DegreesPoint(lon,lat), quadtreeDepth).path();
+            vector<int16_t> path = Tile::fromDegrees(DegreesPoint(lon,lat), quadtreeDepth).path();
 
             Node* currentNode = quadtreeRoot;
 
@@ -44,29 +44,36 @@ Node* generateCountQuadtree(string FileName, char separator)
 
             for(auto i = 0; i < quadtreeDepth; i++)
             {
+                vector<int16_t>::const_iterator firstElement = path.begin();
+                vector<int16_t>::const_iterator lastElement = firstElement + (i + 1);
+                vector<int16_t> nodeAddress(firstElement, lastElement);
+
+                //if(firstElement == lastElement)
+                    //nodeAddress.push_back(path[i]);
+
                 switch(path[i])
                 {
                     case 0:
                         if(currentNode->a == NULL)
-                            currentNode->a = new Node();
+                            currentNode->a = new Node(nodeAddress);
 
                         currentNode = currentNode->a;
                         break;
                     case 1:
                         if(currentNode->b == NULL)
-                            currentNode->b = new Node();
+                            currentNode->b = new Node(nodeAddress);
 
                         currentNode = currentNode->b;
                         break;
                     case 2:
                         if(currentNode->c == NULL)
-                            currentNode->c = new Node();
+                            currentNode->c = new Node(nodeAddress);
 
                         currentNode = currentNode->c;
                         break;
                     case 3:
                         if(currentNode->d == NULL)
-                            currentNode->d = new Node();
+                            currentNode->d = new Node(nodeAddress);
 
                         currentNode = currentNode->d;
                         break;
@@ -85,7 +92,17 @@ int main(int argc, char** args)
 {
     Node* quadtree = generateCountQuadtree(*(args + sizeof(char)), '|');
 
+
+    int numThreads = 8;
+    int numObjects = quadtree->objectCount;
+    int baseLine = numObjects / numThreads;
+
+
+
+
     //traverse quadtree
+
+
 
     //partition quadtree
 

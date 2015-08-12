@@ -17,7 +17,7 @@ class Tile
         Tile(int x, int y, int z);
         static Tile fromMercator(MercatorPoint p, int z);
         static Tile fromDegrees(DegreesPoint p, int z);
-        vector<int> path();
+        vector<int16_t> path();
 
         MercatorPoint min();
         MercatorPoint max();

@@ -24,9 +24,9 @@ Tile Tile::fromDegrees(DegreesPoint p, int z)
     return fromMercator(p.toMercator(), z);
 }
 
-vector<int> Tile::path()
+vector<int16_t> Tile::path()
 {
-    vector<int> result;
+    vector<int16_t> result;
     int i = this->z;
     while(i > 0)
     {

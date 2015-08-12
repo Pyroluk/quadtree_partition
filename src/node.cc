@@ -1,27 +1,63 @@
 #include "node.hh"
 
+//used for root
 Node::Node()
 {
     objectCount = 0;
     a = b = c = d = 0;
 
-    //this->level = level;
+    AddressType address;
+    address.push_back(-1);
+    this->address = address;
 }
 
-/*Node* Node::createQuadtree(int levels, int currentLevel)
+Node::Node(AddressType address)
 {
-    if(currentLevel <= levels)
-    {
-        a = new Node(currentLevel);
-        b = new Node(currentLevel);
-        c = new Node(currentLevel);
-        d = new Node(currentLevel);
+    objectCount = 0;
+    a = b = c = d = 0;
+    this->address = address;
+}
 
-        a->createQuadtree(levels, currentLevel--);
-        b->createQuadtree(levels, currentLevel--);
-        c->createQuadtree(levels, currentLevel--);
-        d->createQuadtree(levels, currentLevel--);
+std::vector<int> Node::calculateSegmentation(Node* rootNode, int baseLine)
+{
+    /*numbers from 0-4^quadtreelevels
+    vector<AddressType> segmentation;
+
+
+    //Baum durchlaufen, von oben nach unten
+
+    //Wenn KnotenCount < Baseline ist, dann Adresse des Knoten speichern, wenn alle Geschwisterknoten auch kleiner sind als baseline, dann speicher die Adresse des Elternknotens
+
+
+
+
+
+
+
+
+
+
+    int currentSum = 0;
+
+    //traverse tree
+    //childs first
+    //if leafnode increment Count
+
+    Node* currentNode = rootNode;
+
+    if(currentNode->objectCount > baseLine)//check Childs
+    {
+        if(currentNode->a->objectCount > baseLine)
+            ca
     }
 
-    return this;
-}*/
+    //it is a leafe node
+    if(currentNode->a == NULL && currentNode->b == NULL && currentNode->c == NULL && currentNode->d == NULL)
+    {
+        currentSum += rootNode->objectCount;
+    }
+    else
+    {
+        currentNode = currentNode->a;
+    }*/
+}
