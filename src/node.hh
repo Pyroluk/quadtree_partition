@@ -1,8 +1,9 @@
 #pragma once
 #include <stdint.h>
 #include <vector>
+#include <stack>
 
-using AddressType = std::vector<int16_t>;
+using AddressType = uint64_t;
 
 class Node;//forward declaration
 
@@ -11,10 +12,10 @@ class Node
     public:
 
         uint64_t objectCount;
+        uint8_t lable;
 
-        AddressType address;
-
-        //int level;
+        //one parent
+        Node *parent;
 
         //four childs
         Node *a;
@@ -23,9 +24,7 @@ class Node
         Node *d;
 
         Node();
-        Node(AddressType address);
+        Node(Node *parent, uint8_t lable);
 
-        Node* createQuadtree(int levels, int currentLevel);
-
-        std::vector<int> calculateSegmentation(Node *rootNode, int baseLine);
+        AddressType getAddress();
 };

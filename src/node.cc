@@ -4,60 +4,28 @@
 Node::Node()
 {
     objectCount = 0;
-    a = b = c = d = 0;
-
-    AddressType address;
-    address.push_back(-1);
-    this->address = address;
+    a = b = c = d = parent = 0;
+    lable = 0;
 }
 
-Node::Node(AddressType address)
+Node::Node(Node* parent, uint8_t lable)
 {
     objectCount = 0;
     a = b = c = d = 0;
-    this->address = address;
+    this->parent = parent;
+    this->lable = lable;
 }
 
-std::vector<int> Node::calculateSegmentation(Node* rootNode, int baseLine)
+AddressType Node::getAddress()
 {
-    /*numbers from 0-4^quadtreelevels
-    vector<AddressType> segmentation;
+    AddressType result = 0;
 
-
-    //Baum durchlaufen, von oben nach unten
-
-    //Wenn KnotenCount < Baseline ist, dann Adresse des Knoten speichern, wenn alle Geschwisterknoten auch kleiner sind als baseline, dann speicher die Adresse des Elternknotens
-
-
-
-
-
-
-
-
-
-
-    int currentSum = 0;
-
-    //traverse tree
-    //childs first
-    //if leafnode increment Count
-
-    Node* currentNode = rootNode;
-
-    if(currentNode->objectCount > baseLine)//check Childs
+    Node* currentNode = this;
+    while(currentNode->parent != 0)
     {
-        if(currentNode->a->objectCount > baseLine)
-            ca
+        //addresses are stored from left to right, fine to coarse
+        result = (result << 2) + (currentNode->lable & 0x3);
+        currentNode = currentNode->parent;
     }
-
-    //it is a leafe node
-    if(currentNode->a == NULL && currentNode->b == NULL && currentNode->c == NULL && currentNode->d == NULL)
-    {
-        currentSum += rootNode->objectCount;
-    }
-    else
-    {
-        currentNode = currentNode->a;
-    }*/
+    return result;
 }

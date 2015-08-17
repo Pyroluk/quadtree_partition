@@ -10,6 +10,7 @@
 #include "degreespoint.hh"
 #include "tile.hh"
 #include "node.hh"
+#include "partitionfunction.hh"
 
 #define LOG
 
@@ -17,7 +18,7 @@
 #include "log.hh"
 #endif
 
-#define quadtreeDepth 2
+#define quadtreeDepth 25
 
 using namespace std;
 
@@ -162,50 +163,41 @@ Node* generateTestQuadtree()
         point.clear();
     }
 
-    //read tsv file line by line
-    for(auto i = 0; testQuadtreeLevel2.size(); i++)
-    {
-        //convert to path
-        //std::cerr << lat << ", " << lon << std::endl;
-        vector<int16_t> path = testQuadtreeLevel2[i];
+    int16_t test = testQuadtreeLevel2.size();
 
+    //read tsv file line by line
+    for(auto i = 0; i < testQuadtreeLevel2.size(); i++)
+    {
         Node* currentNode = quadtreeRoot;
 
         //increase counter
         currentNode->objectCount++;
 
-        for(auto i = 0; i < quadtreeDepth; i++)
+        for(auto k = 0; k < 2; k++)
         {
-            vector<int16_t>::const_iterator firstElement = path.begin();
-            vector<int16_t>::const_iterator lastElement = firstElement + (i + 1);
-            vector<int16_t> nodeAddress(firstElement, lastElement);
-
-            //if(firstElement == lastElement)
-                //nodeAddress.push_back(path[i]);
-
-            switch(path[i])
+            switch(testQuadtreeLevel2[i][k])
             {
                 case 0:
                     if(currentNode->a == NULL)
-                        currentNode->a = new Node(nodeAddress);
+                        currentNode->a = new Node(currentNode, 0);
 
                     currentNode = currentNode->a;
                     break;
                 case 1:
                     if(currentNode->b == NULL)
-                        currentNode->b = new Node(nodeAddress);
+                        currentNode->b = new Node(currentNode, 1);
 
                     currentNode = currentNode->b;
                     break;
                 case 2:
                     if(currentNode->c == NULL)
-                        currentNode->c = new Node(nodeAddress);
+                        currentNode->c = new Node(currentNode, 2);
 
                     currentNode = currentNode->c;
                     break;
                 case 3:
                     if(currentNode->d == NULL)
-                        currentNode->d = new Node(nodeAddress);
+                        currentNode->d = new Node(currentNode, 3);
 
                     currentNode = currentNode->d;
                     break;
@@ -224,10 +216,6 @@ Node* generateCountQuadtree(string FileName, char separator)
     double lat, lon;
     Node* quadtreeRoot = new Node();
     ifstream txtFile(FileName);
-
-    #ifdef LOG
-    logging::getLog().newNode((logging::NodeID)quadtreeRoot, 0, 0);
-    #endif
 
     //read tsv file line by line
     for(string line; getline(txtFile, line); )
@@ -253,42 +241,29 @@ Node* generateCountQuadtree(string FileName, char separator)
 
             for(auto i = 0; i < quadtreeDepth; i++)
             {
-                vector<int16_t>::const_iterator firstElement = path.begin();
-                vector<int16_t>::const_iterator lastElement = firstElement + (i + 1);
-                vector<int16_t> nodeAddress(firstElement, lastElement);
-
-                //if(firstElement == lastElement)
-                    //nodeAddress.push_back(path[i]);
-
                 switch(path[i])
                 {
                     case 0:
                         if(currentNode->a == NULL)
-                        {
-                            currentNode->a = new Node(nodeAddress);
-
-                            //#ifdef LOG
-                            //logging::getLog().newNode((logging::NodeID)currentNode->a, 0, 0);
-                            //#endif
-                        }
+                            currentNode->a = new Node(currentNode, 0);
 
                         currentNode = currentNode->a;
                         break;
                     case 1:
                         if(currentNode->b == NULL)
-                            currentNode->b = new Node(nodeAddress);
+                            currentNode->b = new Node(currentNode, 1);
 
                         currentNode = currentNode->b;
                         break;
                     case 2:
                         if(currentNode->c == NULL)
-                            currentNode->c = new Node(nodeAddress);
+                            currentNode->c = new Node(currentNode, 2);
 
                         currentNode = currentNode->c;
                         break;
                     case 3:
                         if(currentNode->d == NULL)
-                            currentNode->d = new Node(nodeAddress);
+                            currentNode->d = new Node(currentNode, 3);
 
                         currentNode = currentNode->d;
                         break;
@@ -303,52 +278,56 @@ Node* generateCountQuadtree(string FileName, char separator)
     return quadtreeRoot;
 }
 
-int main(int argc, char** args)
+
+vector<uint64_t> testDistrubution(string FileName, char separator, Node* quadtreeRoot)
 {
-    Node* quadtree = generateTestQuadtree();// generateCountQuadtree(*(args + sizeof(char)), '|');
-    Node* lastLeave;
+    double lat, lon;
+    ifstream txtFile(FileName);
 
-    int numThreads = 3;
-    int64_t numObjects = quadtree->objectCount;
-    int64_t baseLine = numObjects / numThreads;
-    int64_t currentSum = 0;
+    PartitionFunction* partitionFunction = new PartitionFunction(quadtreeRoot);
 
-    vector<AddressType> splitNodes;
+    vector<uint64_t> counts;
+    for(int i = 0; i < partitionFunction->numThreads; i++)
+        counts.push_back(0);
 
-    stack<Node*> nodeStack;
-
-    nodeStack.push(quadtree);
-
-    while (!nodeStack.empty())
+    //read tsv file line by line
+    for(string line; getline(txtFile, line); )
     {
-        Node* currentNode = nodeStack.top();
-        nodeStack.pop();
+        //extract lat and lon
+        string item;
+        stringstream ss(line);
+        getline(ss, item, separator);
+        lat = atof(item.c_str());
+        getline(ss, item, separator);
+        lon = atof(item.c_str());
 
-        //if its a leaf, increment counter
-        if(currentNode->a == NULL && currentNode->b == NULL && currentNode->c == NULL && currentNode->d == NULL)
+        if(lat != 0.0 && lon != 0.0) //valid points
         {
-            currentSum += currentNode->objectCount;
+            //convert to path
+            //std::cerr << lat << ", " << lon << std::endl;
+            vector<int16_t> path = Tile::fromDegrees(DegreesPoint(lon,lat), quadtreeDepth).path();
 
-            //split, store Address of Node
-            if(currentSum > baseLine)
+            auto n = path.size();
+            AddressType result = 0;
+            for (int i = n - 1; i >= 0; --i)
             {
-                splitNodes.push_back(currentNode->address);
-                currentSum = 0;
+                auto lbl = path[i];
+                result += ((lbl & 0x3) << 2*i);
             }
 
-            lastLeave = currentNode;
+            int thread_number = partitionFunction->getThreadIdForAddress(result, quadtreeDepth);
+            ++counts[thread_number];
         }
-
-        //push childes on stack
-        if (currentNode->d != NULL)
-            nodeStack.push(currentNode->d);
-        if (currentNode->c != NULL)
-            nodeStack.push(currentNode->c);
-        if (currentNode->b != NULL)
-            nodeStack.push(currentNode->b);
-        if (currentNode->a != NULL)
-            nodeStack.push(currentNode->a);
     }
+
+    return counts;
+}
+
+int main(int argc, char** args)
+{
+    Node* quadtreeRoot = generateCountQuadtree(*(args + sizeof(char)), '|'); //generateTestQuadtree();// generateCountQuadtree(*(args + sizeof(char)), '|');
+
+    vector<uint64_t> counts = testDistrubution(*(args + sizeof(char)), '|', quadtreeRoot);
 
     return 0;
 }
