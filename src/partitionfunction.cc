@@ -49,7 +49,11 @@ PartitionFunction::PartitionFunction(Node* quadtreeRoot)
 int PartitionFunction::getThreadIdForAddress(AddressType address, int quadtreeDepth) const
 {
     int ThreadId = 0;
-    AddressType currentAddressBorder = split_points[ThreadId];
+    AddressType currentAddressBorder = split_points[0];
+    AddressType nextAddressBorder = 0;
+
+    if(split_points.size() > 1)
+        nextAddressBorder = split_points[1];
 
     //check if address is bigger than currentAddressBorder
 
@@ -58,7 +62,14 @@ int PartitionFunction::getThreadIdForAddress(AddressType address, int quadtreeDe
         for(int i = 0; i < quadtreeDepth; i++)
         {
             //if the addressborder is smaller than the address, next addressborder
-            if((currentAddressBorder & (0x3 << i*2)) < (address & (0x3 << i*2)))
+            //man muss immer zwei vergleichen
+
+            //wenn die aktuelle Grenze kleiner als addresse ist
+
+            int16_t addressLable = (address & (0x3 << i*2));
+            int16_t borderLable = (currentAddressBorder & (0x3 << i*2));
+
+            if((address & (0x3 << i*2)) > (currentAddressBorder & (0x3 << i*2)))
             {
                 currentAddressBorder = split_points[++ThreadId];
                 break;

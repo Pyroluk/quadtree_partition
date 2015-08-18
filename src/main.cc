@@ -22,10 +22,8 @@
 
 using namespace std;
 
-Node* generateTestQuadtree()
+vector<vector<int16_t>> getQuattreeTestPoints()
 {
-    Node* quadtreeRoot = new Node();
-
     vector<vector<int16_t>> testQuadtreeLevel2;
 
     //add points
@@ -163,7 +161,14 @@ Node* generateTestQuadtree()
         point.clear();
     }
 
-    int16_t test = testQuadtreeLevel2.size();
+    return testQuadtreeLevel2;
+}
+
+Node* generateTestQuadtree()
+{
+    Node* quadtreeRoot = new Node();
+
+    vector<vector<int16_t>> testQuadtreeLevel2 = getQuattreeTestPoints();
 
     //read tsv file line by line
     for(auto i = 0; i < testQuadtreeLevel2.size(); i++)
@@ -312,7 +317,8 @@ vector<uint64_t> testDistrubution(string FileName, char separator, Node* quadtre
             for (int i = n - 1; i >= 0; --i)
             {
                 auto lbl = path[i];
-                result += ((lbl & 0x3) << 2*i);
+                //result = result + ((lbl & 0x3) << 2*i);
+                result = (result << 2) + (lbl & 0x3);
             }
 
             int thread_number = partitionFunction->getThreadIdForAddress(result, quadtreeDepth);
