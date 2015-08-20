@@ -3,11 +3,9 @@
 #include <cmath>
 // #include <boost/lexical_cast.hpp>
 
-DegreesPoint::DegreesPoint(double x, double y)
-{
-    this->x = x;
-    this->y = y;
-}
+DegreesPoint::DegreesPoint(double x, double y):
+    x(x), y(y)
+{}
 
 std::string DegreesPoint::toString()
 {

@@ -4,11 +4,9 @@
 #include <iostream>
 #include <math.h>
 
-MercatorPoint::MercatorPoint(double x, double y)
-{
-    this->x = x;
-    this->y = y;
-}
+MercatorPoint::MercatorPoint(double x, double y):
+    x(x), y(y)
+{}
 
 std::string MercatorPoint::toString()
 {

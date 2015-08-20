@@ -24,21 +24,6 @@ Tile Tile::fromDegrees(DegreesPoint p, int z)
     return fromMercator(p.toMercator(), z);
 }
 
-vector<int16_t> Tile::path()
-{
-    vector<int16_t> result;
-    int i = this->z;
-    while(i > 0)
-    {
-        int xbit = ((this->x >> (i-1)) & 0x1) ? 1 : 0;
-        int ybit = ((this->y >> (i-1)) & 0x1) ? 1 : 0;
-        int label = xbit + 2 * ybit;
-        i--;
-        result.push_back(label);
-    }
-    return result;
-}
-
 MercatorPoint Tile::min()
 {
     int size = 1 << this->z;

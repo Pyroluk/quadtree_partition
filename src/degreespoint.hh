@@ -8,13 +8,12 @@ class MercatorPoint;//forward declaration
 
 class DegreesPoint
 {
-    public:
-        int x;
-        int y;
-
-        DegreesPoint(double x, double y);
-
-        std::string toString();
-
-        MercatorPoint toMercator();
+public:
+    DegreesPoint() = default;
+    DegreesPoint(double x, double y);
+    std::string toString();
+    MercatorPoint toMercator();
+public:
+    double x;
+    double y;
 };

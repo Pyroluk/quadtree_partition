@@ -6,12 +6,12 @@ class DegreesPoint;//forward declaration
 
 class MercatorPoint
 {
-    public:
-        double x;
-        double y;
-
-        MercatorPoint(double x, double y);
-        std::string toString();
-        DegreesPoint toDegrees();
+public:
+    MercatorPoint(double x, double y);
+    std::string toString();
+    DegreesPoint toDegrees();
+public:
+    double x;
+    double y;
 };
 

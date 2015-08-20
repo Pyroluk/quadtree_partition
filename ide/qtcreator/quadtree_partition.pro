@@ -1,5 +1,6 @@
 # LOCAL=$$system(echo $BASE)/local
 BASE=../..
+THIRDPARTY=../../thirdparty
 
 QMAKE_CXXFLAGS +=         \
 -std=c++11
@@ -8,6 +9,7 @@ QT -= core gui opengl
 
 INCLUDEPATH +=                                 \
 $${BASE}/src                                   \
+$${THIRDPARTY}
 
 #LIBS +=                 \
 #-L$${LOCAL}/lib         \
