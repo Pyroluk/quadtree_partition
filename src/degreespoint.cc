@@ -1,6 +1,7 @@
 #include "degreespoint.hh"
-#include <sstream>
+
 #include <cmath>
+#include <sstream>
 // #include <boost/lexical_cast.hpp>
 
 DegreesPoint::DegreesPoint(double x, double y):
