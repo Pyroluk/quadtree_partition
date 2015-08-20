@@ -1,8 +1,8 @@
 #include "mercatorpoint.hh"
 
 #include <sstream>
-#include <iostream>
-#include <math.h>
+#include <iostream> 
+#include <cmath>
 
 MercatorPoint::MercatorPoint(double x, double y):
     x(x), y(y)

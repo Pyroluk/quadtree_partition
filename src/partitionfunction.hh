@@ -44,7 +44,10 @@ template <typename Key>
 PartitionFunction<Key>::PartitionFunction(int num_parts, Count total_count):
     num_parts(num_parts),
     total_count(total_count)
-{}
+{
+    group.count    = 0;
+    group.num_keys = 0;
+}
 
 #define xDEBUG_PARTITION_FUNCTION
 

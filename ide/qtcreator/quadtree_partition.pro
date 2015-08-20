@@ -3,7 +3,8 @@ BASE=../..
 THIRDPARTY=../../thirdparty
 
 QMAKE_CXXFLAGS +=         \
--std=c++11
+-std=c++11 \
+-D_USE_MATH_DEFINES
 
 QT -= core gui opengl
 

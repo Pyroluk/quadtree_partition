@@ -4,6 +4,8 @@
 #include <vector>
 #include <stack>
 #include <iostream>
+#include <cstdint>
+#include <memory>
 
 namespace quadtree {
 

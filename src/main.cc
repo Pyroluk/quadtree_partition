@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <math.h>
+#include <cmath>
 #include <stack>
 #include <random>
 #include <map>
