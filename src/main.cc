@@ -443,6 +443,7 @@ public:
     double stddev() const;
     double min() const;
     double max() const;
+    double sum() const;
     int size() const;
 public:
     int    _size { 0 };
@@ -468,6 +469,10 @@ void Sample::push(double v) {
 
 double Sample::mean() const {
     return _size ? _sum / _size : 0.0;
+}
+
+double Sample::sum() const {
+    return _sum;
 }
 
 double Sample::stddev() const {
@@ -586,9 +591,10 @@ int main(int argc, char** args)
         sample.push(count);
         std::cout << "part[" << std::setw(2) << part << "] -> " << std::setw(10) << count << std::endl;
     }
-
     std::cout << sample << std::endl;
 
+    std::cout << "Estimated speedup:       " << sample.sum()/sample.max() << std::endl;
+    std::cout << "Estimated time fraction: " << sample.max()/sample.sum() << std::endl;
 
 
 
