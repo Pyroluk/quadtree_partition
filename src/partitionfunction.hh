@@ -50,6 +50,10 @@ PartitionFunction<Key>::PartitionFunction(int num_parts, Count total_count):
 
 template <typename Key>
 void PartitionFunction<Key>::push(const Key& key, Count count) {
+
+    if (split_points.size() == num_parts-1)
+        return;
+
     auto threshold = total_count / num_parts;
     if (group.count + count < threshold) {
         group.last_key = key;
