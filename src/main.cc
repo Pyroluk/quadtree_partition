@@ -596,8 +596,6 @@ int main(int argc, char** args)
     std::cout << "Estimated speedup:       " << sample.sum()/sample.max() << std::endl;
     std::cout << "Estimated time fraction: " << sample.max()/sample.sum() << std::endl;
 
-
-
 //    Node* quadtreeRoot = generateCountQuadtree(*(args + sizeof(char)), '|'); //generateTestQuadtree();// generateCountQuadtree(*(args + sizeof(char)), '|');
 //    vector<uint64_t> counts = testDistrubution(*(args + sizeof(char)), '|', quadtreeRoot);
 //    return 0;
