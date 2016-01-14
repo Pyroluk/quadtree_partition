@@ -1,7 +1,7 @@
 set(CMAKE_INCLUDE_CURRENT_DIR on)
-include_directories(../../thirdparty)
+include_directories(../thirdparty)
 
-add_executable (qtpart STATIC
+add_executable (qtpart
 main.cc
 degreespoint.cc
 log.cc
