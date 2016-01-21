@@ -45,9 +45,6 @@
     <ClInclude Include="..\..\..\thirdparty\tclap\ArgTraits.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\thirdparty\tclap\CmdLine.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\thirdparty\tclap\CmdLineInterface.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -107,6 +104,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\thirdparty\tclap\ZshCompletionOutput.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\thirdparty\tclap\CmdLine.h">
+      <Filter>Headerdateien\tclap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

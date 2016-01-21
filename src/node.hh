@@ -20,6 +20,7 @@ namespace quadtree {
     struct Path {
     public:
         Path();
+		Path(std::vector<int16_t> address);
         Path(int x, int y, int level);
         int x() const;
         int y() const;

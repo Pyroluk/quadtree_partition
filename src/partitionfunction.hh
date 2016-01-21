@@ -16,6 +16,7 @@ template <typename Key>
 struct PartitionFunction
 {
 public:
+	PartitionFunction();
     PartitionFunction(int num_parts, Count total_count);
     void push(const Key& key, Count count);
     Part part(const Key& key);
@@ -41,6 +42,15 @@ bool PartitionFunction<Key>::empty() const {
 }
 
 template <typename Key>
+PartitionFunction<Key>::PartitionFunction() :
+	num_parts(0),
+	total_count(0)
+{
+	group.count = 0;
+	group.num_keys = 0;
+}
+
+template <typename Key>
 PartitionFunction<Key>::PartitionFunction(int num_parts, Count total_count):
     num_parts(num_parts),
     total_count(total_count)
@@ -49,7 +59,7 @@ PartitionFunction<Key>::PartitionFunction(int num_parts, Count total_count):
     group.num_keys = 0;
 }
 
-#define xDEBUG_PARTITION_FUNCTION
+#define DEBUG_PARTITION_FUNCTION
 
 template <typename Key>
 void PartitionFunction<Key>::push(const Key& key, Count count) {
@@ -102,7 +112,6 @@ Part PartitionFunction<Key>::part(const Key& key) {
                                key);
     return static_cast<Part>(std::distance(split_points.begin(),it));
 }
-
 }
 
 
