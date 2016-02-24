@@ -14,20 +14,25 @@ namespace quadtree {
 
 	Path::Path(std::vector<int16_t> address)
 	{
-		int _x = _y = _level = 0;
+		int x = 0;
+		int y = 0;
+		int level = 0;
 		for (auto& label : address)
 		{	
 			if (label < 0 || label > 3)
 				throw std::runtime_error("ooooops!!");
 
-			_x *= 2;
-			_y *= 2;
-			_level += 1;
+			x *= 2;
+			y *= 2;
+			level += 1;
 			if (label & 0x1)
-				_x += 1;
+				x += 1;
 			if (label & 0x2)
-				_y += 1;
+				y += 1;
 		}
+		_x = x;
+		_y = y;
+		_level = level;
 	}
 
     Path::Path(int x, int y, int level):

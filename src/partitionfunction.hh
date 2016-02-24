@@ -77,7 +77,7 @@ void PartitionFunction<Key>::push(const Key& key, Count count) {
         if (group.num_keys == 0) {
             split_points.push_back(key);
 #ifdef DEBUG_PARTITION_FUNCTION
-            std::cerr << "adding split point at " << key << " count: " << count << std::endl;
+            std::cout << "adding split point at " << key << " count: " << count << std::endl;
 #endif
         }
         else {
@@ -86,7 +86,7 @@ void PartitionFunction<Key>::push(const Key& key, Count count) {
             if (diff_without < diff_with) {
                 split_points.push_back(group.last_key);
 #ifdef DEBUG_PARTITION_FUNCTION
-                std::cerr << "adding split point at " << group.last_key << " count: " << group.count << std::endl;
+                std::cout << "adding split point at " << group.last_key << " count: " << group.count << std::endl;
 #endif
                 group.count = count;
                 group.last_key = key;
@@ -94,7 +94,7 @@ void PartitionFunction<Key>::push(const Key& key, Count count) {
             }
             else {
 #ifdef DEBUG_PARTITION_FUNCTION
-                std::cerr << "adding split point at " << key << " count: " << group.count + count << std::endl;
+                std::cout << "adding split point at " << key << " count: " << group.count + count << std::endl;
 #endif
                 split_points.push_back(key);
                 group.count    = 0;
@@ -107,10 +107,8 @@ void PartitionFunction<Key>::push(const Key& key, Count count) {
 
 template <typename Key>
 Part PartitionFunction<Key>::part(const Key& key) {
-    auto it = std::lower_bound(split_points.begin(),
-                               split_points.end(),
-                               key);
-    return static_cast<Part>(std::distance(split_points.begin(),it));
+    auto it = std::lower_bound(split_points.begin(), split_points.end(), key);
+    return static_cast<Part>(std::distance(split_points.begin(), it));
 }
 }
 
